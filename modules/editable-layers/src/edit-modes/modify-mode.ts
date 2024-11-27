@@ -225,12 +225,19 @@ export class ModifyMode extends GeoJsonEditMode {
         .replaceGeometry(editHandleProperties.featureIndex, {coordinates, type: 'Polygon'})
         .getObject();
     } else {
+      const propertiesToDelete : string[] = [];
+      if (editedFeature.properties.shape === "Circle"){
+        propertiesToDelete.push('radius', 'center', 'shape');
+      }
+      if (editedFeature.properties.shape === "Ellipse"){
+        propertiesToDelete.push('center', 'shape', 'xSemiAxis', 'ySemiAxis', 'angle');
+      }
       updatedData = new ImmutableFeatureCollection(props.data)
         .replacePosition(
           editHandleProperties.featureIndex,
           editHandleProperties.positionIndexes,
           event.mapCoords
-        )
+        ).deleteProperties(editHandleProperties.featureIndex, propertiesToDelete)
         .getObject();
     }
 

@@ -180,6 +180,42 @@ export class ImmutableFeatureCollection {
     return new ImmutableFeatureCollection(updatedFeatureCollection);
   }
 
+  updateProperties(featureIndex: number, properties: {}): ImmutableFeatureCollection {
+    const updatedFeature: any = this.featureCollection.features[featureIndex];
+    updatedFeature.properties = Object.assign(updatedFeature.properties, properties);
+
+    const updatedFeatureCollection = {
+      ...this.featureCollection,
+      features: [
+        ...this.featureCollection.features.slice(0, featureIndex),
+        updatedFeature,
+        ...this.featureCollection.features.slice(featureIndex + 1)
+      ]
+    };
+
+    return new ImmutableFeatureCollection(updatedFeatureCollection);
+  }
+
+  deleteProperties(featureIndex: number, toDelete: string[]): ImmutableFeatureCollection {
+    if (toDelete.length===0){
+      return this;
+    }
+    const updatedFeature: any = this.featureCollection.features[featureIndex];
+    for (const item of toDelete){
+      delete updatedFeature.properties[item]
+    }
+    const updatedFeatureCollection = {
+      ...this.featureCollection,
+      features: [
+        ...this.featureCollection.features.slice(0, featureIndex),
+        updatedFeature,
+        ...this.featureCollection.features.slice(featureIndex + 1)
+      ]
+    };
+
+    return new ImmutableFeatureCollection(updatedFeatureCollection);
+  }
+
   addFeature(feature: Feature): ImmutableFeatureCollection {
     return this.addFeatures([feature]);
   }

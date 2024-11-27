@@ -144,7 +144,7 @@ export class ResizeCircleMode extends GeoJsonEditMode {
 
       const feature = this.getSelectedFeature(props);
       // @ts-expect-error turf types diff
-      const center = turfCenter(feature).geometry.coordinates;
+      const center = feature.properties.center ? feature.properties.center : turfCenter(feature).geometry.coordinates;
       const numberOfSteps = Object.entries(feature.geometry.coordinates[0]).length - 1;
       const radius = Math.max(distance(center, event.mapCoords), 0.001);
 
@@ -154,7 +154,7 @@ export class ResizeCircleMode extends GeoJsonEditMode {
       const geometry = updatedFeature.geometry;
 
       const updatedData = new ImmutableFeatureCollection(props.data)
-        .replaceGeometry(editHandleProperties.featureIndex, geometry)
+        .replaceGeometry(editHandleProperties.featureIndex, geometry).updateProperties(editHandleProperties.featureIndex, {radius:{value: radius, unit: 'kilometers'}})
         .getObject();
 
       props.onEdit({

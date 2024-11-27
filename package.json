@@ -13,6 +13,7 @@
   "type": "module",
   "workspaces": [
     "examples/*",
+    "examples/editable-layers/*",
     "modules/*"
   ],
   "workspaces_examples": [
